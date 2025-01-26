@@ -10,9 +10,13 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+         stage('Checkout') {
             steps {
-                checkout scm
+                script {
+                    echo "Repository URL: ${env.GIT_URL}"
+                    echo "Branch Name: ${env.BRANCH_NAME}"
+                    checkout scm
+                }
             }
         }
 
@@ -66,5 +70,22 @@ pipeline {
         failure {
             echo 'Pipeline failed!'
         }
+    }
+}
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    echo "Repository URL: ${env.GIT_URL}"
+                    echo "Branch Name: ${env.BRANCH_NAME}"
+                    checkout scm
+                }
+            }
+        }
+        // Other stages
     }
 }
