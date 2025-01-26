@@ -10,8 +10,7 @@ pipeline {
     environment {
         CI = 'true'
         BRANCH_NAME = "${env.BRANCH_NAME}"
-        echo "${env.BRANCH_NAME}"
-        echo "${env}"
+        ENV = "${env}"
     }
     
     stages {
@@ -21,6 +20,7 @@ pipeline {
                 checkout scm
                 sh 'git --version'
                 echo "Building branch: ${BRANCH_NAME}"
+                echo "Environment Variable: ${ENV}"
             }
         }
         
