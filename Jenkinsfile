@@ -48,9 +48,9 @@ pipeline {
         
         // Deploy based on branch
        stage('Deploy') {
-            steps {
-                sh 'npm start &'
-                sh 'sleep 10' // Give the server more time to start
+              steps {
+                sh 'node server/index.js &'
+                sh 'sleep 20' // Give the server more time to start
                 sh 'curl -s http://localhost:3001/api/hello || exit 1'
             }
         }
@@ -89,6 +89,11 @@ pipeline {
         failure {
             echo 'Pipeline failed!'
             // Add failure notifications
+        }
+        always {
+            script {
+                sh 'pkill -f "node server/index.js" || true'
+            }
         }
     }
 }
