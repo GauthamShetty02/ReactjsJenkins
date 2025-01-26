@@ -48,7 +48,7 @@ pipeline {
                         gradle startServer &
                         SERVER_PID=$!
                         echo $SERVER_PID > server.pid
-                        sleep 30
+                        sleep 15
                         if ps -p $SERVER_PID > /dev/null; then
                             echo "Server started successfully"
                         else
