@@ -48,7 +48,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'npm start &'
-                sh 'sleep 5' // Give the server some time to start
+                sh 'sleep 20' // Give the server some time to start
                 sh 'curl http://localhost:3001/api/hello'
             }
         }
