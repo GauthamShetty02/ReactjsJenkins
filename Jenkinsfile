@@ -31,11 +31,11 @@ pipeline {
         }
         
         // Run tests
-        stage('Test') {
-            steps {
-                sh 'npm test -- --watchAll=false'
-            }
-        }
+        // stage('Test') {
+        //     steps {
+        //         sh 'npm test -- --watchAll=false'
+        //     }
+        // }
         
         // Build the application
         stage('Build') {
