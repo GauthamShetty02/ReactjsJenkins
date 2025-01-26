@@ -41,35 +41,67 @@ pipeline {
         //     }
         // }
 
-        stage('Deploy') {
+        // stage('Deploy') {
+        //     steps {
+        //         script {
+        //             sh '''
+        //                 gradle startServer &
+        //                 SERVER_PID=$!
+        //                 echo $SERVER_PID > server.pid
+        //                 sleep 15
+        //                 if ps -p $SERVER_PID > /dev/null; then
+        //                     echo "Server started successfully"
+        //                 else
+        //                     echo "Server failed to start"
+        //                     exit 1
+        //                 fi
+        //             '''
+        //         }
+        //         sh '''
+        //             for i in {1..5}; do
+        //                 if curl -s http://localhost:3001/api/hello; then
+        //                     echo "Server is responsive"
+        //                     exit 0
+        //                 fi
+        //                 sleep 5
+        //             done
+        //             echo "Server is not responsive after multiple attempts"
+        //             exit 1
+        //         '''
+        //     }
+        // }
+
+          
+        stage('Deploy Locally') {
             steps {
                 script {
                     sh '''
-                        gradle startServer &
-                        SERVER_PID=$!
-                        echo $SERVER_PID > server.pid
-                        sleep 15
-                        if ps -p $SERVER_PID > /dev/null; then
-                            echo "Server started successfully"
+                        echo "Starting the application..."
+                        nohup npm start > app.log 2>&1 &
+                        echo $! > .pidfile
+                        sleep 30
+                        if ps -p $(cat .pidfile) > /dev/null; then
+                            echo "Application started successfully"
                         else
-                            echo "Server failed to start"
+                            echo "Application failed to start"
                             exit 1
                         fi
                     '''
                 }
                 sh '''
                     for i in {1..5}; do
-                        if curl -s http://localhost:3001/api/hello; then
-                            echo "Server is responsive"
+                        if curl -s http://localhost:3000; then
+                            echo "Application is responsive"
                             exit 0
                         fi
                         sleep 5
                     done
-                    echo "Server is not responsive after multiple attempts"
+                    echo "Application is not responsive after multiple attempts"
                     exit 1
                 '''
             }
         }
+
 
         stage('Deployment Info') {
             steps {
