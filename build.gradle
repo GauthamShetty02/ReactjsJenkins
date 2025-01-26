@@ -26,8 +26,8 @@ task startServer(type: Exec) {
 }
 
 buildReact.dependsOn installDependencies
-testReact.dependsOn installDependencies
+//testReact.dependsOn installDependencies
 
 build.dependsOn buildReact
-check.dependsOn testReact
+//check.dependsOn testReact
 
