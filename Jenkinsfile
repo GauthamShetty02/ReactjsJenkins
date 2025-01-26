@@ -1,91 +1,81 @@
 pipeline {
     agent any
-
+    
+    // Define tools we need
     tools {
-        nodejs "NodeJS 14"
+        nodejs 'NodeJs' // Make sure this matches your Jenkins NodeJS installation name
     }
-
+    
+    // Environment variables
     environment {
         CI = 'true'
+        BRANCH_NAME = "${env.BRANCH_NAME}"
     }
-
+    
     stages {
-         stage('Checkout') {
+        // Checkout the code
+        stage('Checkout') {
             steps {
-                script {
-                    echo "Repository URL: ${env.GIT_URL}"
-                    echo "Branch Name: ${env.BRANCH_NAME}"
-                    checkout scm
-                }
+                checkout scm
+                sh 'git --version'
+                echo "Building branch: ${BRANCH_NAME}"
             }
         }
-
+        
+        // Install dependencies
         stage('Install Dependencies') {
             steps {
+                sh 'npm --version'
                 sh 'npm install'
             }
         }
-
-        stage('Build Client') {
-            steps {
-                dir('client') {
-                    sh 'npm install'
-                    sh 'npm run build'
-                }
-            }
-        }
-
+        
+        // Run tests
         stage('Test') {
             steps {
-                dir('client') {
-                    sh 'npm test -- --watchAll=false'
-                }
+                sh 'npm test -- --watchAll=false'
             }
         }
-
-        stage('Start Server') {
+        
+        // Build the application
+        stage('Build') {
             steps {
-                dir('server') {
-                    sh 'npm install'
-                    sh 'node index.js &'
-                    sh 'sleep 10' // Give the server time to start
-                }
+                sh 'npm run build'
             }
         }
-
-        stage('Health Check') {
+        
+        // Deploy based on branch
+        stage('Deploy') {
             steps {
-                sh 'curl http://localhost:3001/api/health || exit 1'
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        echo 'Deploying to PRODUCTION'
+                        // Add production deployment steps
+                    } else if (env.BRANCH_NAME == 'develop') {
+                        echo 'Deploying to STAGING'
+                        // Add staging deployment steps
+                    } else {
+                        echo 'Deploying to DEV'
+                        // Add development deployment steps
+                    }
+                }
             }
         }
     }
-
+    
+    // Post-build actions
     post {
-        always {
-            sh 'pkill -f "node index.js" || true'
-        }
         success {
             echo 'Pipeline succeeded!'
+            // Add notifications or other success actions
         }
         failure {
             echo 'Pipeline failed!'
+            // Add failure notifications
         }
-    }
-}
-
-pipeline {
-    agent any
-
-    stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    echo "Repository URL: ${env.GIT_URL}"
-                    echo "Branch Name: ${env.BRANCH_NAME}"
-                    checkout scm
-                }
-            }
+        always {
+            // Clean up workspace
+            cleanWs()
         }
-        // Other stages
     }
 }
