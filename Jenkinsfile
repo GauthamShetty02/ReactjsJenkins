@@ -10,6 +10,8 @@ pipeline {
     environment {
         CI = 'true'
         BRANCH_NAME = "${env.BRANCH_NAME}"
+        echo "${env.BRANCH_NAME}"
+        echo "${env}"
     }
     
     stages {
@@ -45,31 +47,21 @@ pipeline {
         }
         
         // Deploy based on branch
-        stage('Deploy') {
+       stage('Deploy') {
             steps {
                 sh 'npm start &'
-                sh 'sleep 20' // Give the server some time to start
-                sh 'curl http://localhost:3001/api/hello'
+                sh 'sleep 10' // Give the server more time to start
+                sh 'curl -s http://localhost:3001/api/hello || exit 1'
             }
         }
 
-        stage('Open in Browser') {
+        stage('Deployment Info') {
             steps {
-                script {
-                    def openBrowser = """
-                        if which xdg-open > /dev/null; then
-                            xdg-open http://localhost:3001
-                        elif which open > /dev/null; then
-                            open http://localhost:3001
-                        else
-                            echo "Could not detect the web browser to use."
-                        fi
-                    """
-                    sh openBrowser
-                }
-                echo "If the browser didn't open automatically, please visit http://localhost:3001 in your web browser."
+                echo "Deployment completed. Application is running at http://localhost:3001"
+                echo "You can manually open this URL in your web browser to view the application."
             }
         }
+        
         // stage('Deploy') {
         //     steps {
         //         script {
@@ -98,10 +90,5 @@ pipeline {
             echo 'Pipeline failed!'
             // Add failure notifications
         }
-        // always {
-        //     script {
-        //         sh 'pkill -f "node server/index.js" || true'
-        //     }
-        // }
     }
 }
