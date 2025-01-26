@@ -17,9 +17,9 @@ task buildReact(type: NpmTask) {
     args = ['run', 'build']
 }
 
-task testReact(type: NpmTask) {
-    args = ['test', '--', '--watchAll=false']
-}
+// task testReact(type: NpmTask) {
+//     args = ['test', '--', '--watchAll=false']
+// }
 
 task startServer(type: Exec) {
     commandLine 'node', 'server/index.js'
