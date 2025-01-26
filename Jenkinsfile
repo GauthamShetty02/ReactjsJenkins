@@ -80,9 +80,9 @@ pipeline {
             echo 'Pipeline failed!'
             // Add failure notifications
         }
-        always {
-            // Clean up workspace
-            cleanWs()
-        }
+        // always {
+        //     // Clean up workspace
+        //     cleanWs()
+        // }
     }
 }
