@@ -98,10 +98,10 @@ pipeline {
             echo 'Pipeline failed!'
             // Add failure notifications
         }
-        always {
-            script {
-                sh 'pkill -f "node server/index.js" || true'
-            }
-        }
+        // always {
+        //     script {
+        //         sh 'pkill -f "node server/index.js" || true'
+        //     }
+        // }
     }
 }
