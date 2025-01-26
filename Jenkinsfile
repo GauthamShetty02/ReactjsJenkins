@@ -47,20 +47,27 @@ pipeline {
         // Deploy based on branch
         stage('Deploy') {
             steps {
-                script {
-                    if (env.BRANCH_NAME == 'main') {
-                        echo 'Deploying to PRODUCTION'
-                        // Add production deployment steps
-                    } else if (env.BRANCH_NAME == 'develop') {
-                        echo 'Deploying to STAGING'
-                        // Add staging deployment steps
-                    } else {
-                        echo 'Deploying to DEV'
-                        // Add development deployment steps
-                    }
-                }
+                sh 'npm start &'
+                sh 'sleep 5' // Give the server some time to start
+                sh 'curl http://localhost:3001/api/hello'
             }
         }
+        // stage('Deploy') {
+        //     steps {
+        //         script {
+        //             if (env.BRANCH_NAME == 'main') {
+        //                 echo 'Deploying to PRODUCTION'
+        //                 // Add production deployment steps
+        //             } else if (env.BRANCH_NAME == 'develop') {
+        //                 echo 'Deploying to STAGING'
+        //                 // Add staging deployment steps
+        //             } else {
+        //                 echo 'Deploying to DEV'
+        //                 // Add development deployment steps
+        //             }
+        //         }
+        //     }
+        // }
     }
     
     // Post-build actions
