@@ -32,6 +32,13 @@ pipeline {
                 sh 'gradle build'
             }
         }
+
+         stage('Archive Artifacts') {
+            steps {
+                echo 'Archiving build artifacts...'
+                archiveArtifacts artifacts: 'client/dist/**', fingerprint: true
+            }
+        }
         
         // stage('Deploy') {
         //     steps {
