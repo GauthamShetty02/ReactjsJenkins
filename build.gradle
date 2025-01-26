@@ -13,8 +13,13 @@ task installDependencies(type: NpmTask) {
     args = ['install']
 }
 
+// task buildReact(type: NpmTask) {
+//     args = ['run', 'build']
+// }
+
 task buildReact(type: NpmTask) {
     args = ['run', 'build']
+
 }
 
 // task testReact(type: NpmTask) {
