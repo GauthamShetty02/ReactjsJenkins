@@ -52,6 +52,24 @@ pipeline {
                 sh 'curl http://localhost:3001/api/hello'
             }
         }
+
+        stage('Open in Browser') {
+            steps {
+                script {
+                    def openBrowser = """
+                        if which xdg-open > /dev/null; then
+                            xdg-open http://localhost:3001
+                        elif which open > /dev/null; then
+                            open http://localhost:3001
+                        else
+                            echo "Could not detect the web browser to use."
+                        fi
+                    """
+                    sh openBrowser
+                }
+                echo "If the browser didn't open automatically, please visit http://localhost:3001 in your web browser."
+            }
+        }
         // stage('Deploy') {
         //     steps {
         //         script {
@@ -80,9 +98,10 @@ pipeline {
             echo 'Pipeline failed!'
             // Add failure notifications
         }
-        // always {
-        //     // Clean up workspace
-        //     cleanWs()
-        // }
+        always {
+            script {
+                sh 'pkill -f "node server/index.js" || true'
+            }
+        }
     }
 }
