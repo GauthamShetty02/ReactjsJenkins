@@ -33,11 +33,41 @@ pipeline {
             }
         }
         
+        // stage('Deploy') {
+        //     steps {
+        //         sh 'gradle startServer &'
+        //         sh 'sleep 20' // Give the server more time to start
+        //         sh 'curl -s http://localhost:3001/api/hello || exit 1'
+        //     }
+        // }
+
         stage('Deploy') {
             steps {
-                sh 'gradle startServer &'
-                sh 'sleep 20' // Give the server more time to start
-                sh 'curl -s http://localhost:3001/api/hello || exit 1'
+                script {
+                    sh '''
+                        gradle startServer &
+                        SERVER_PID=$!
+                        echo $SERVER_PID > server.pid
+                        sleep 30
+                        if ps -p $SERVER_PID > /dev/null; then
+                            echo "Server started successfully"
+                        else
+                            echo "Server failed to start"
+                            exit 1
+                        fi
+                    '''
+                }
+                sh '''
+                    for i in {1..5}; do
+                        if curl -s http://localhost:3001/api/hello; then
+                            echo "Server is responsive"
+                            exit 0
+                        fi
+                        sleep 5
+                    done
+                    echo "Server is not responsive after multiple attempts"
+                    exit 1
+                '''
             }
         }
 

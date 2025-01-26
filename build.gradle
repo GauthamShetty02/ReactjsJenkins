@@ -21,8 +21,14 @@ task buildReact(type: NpmTask) {
 //     args = ['test', '--', '--watchAll=false']
 // }
 
-task startServer(type: Exec) {
-    commandLine 'node', 'server/index.js'
+// task startServer(type: Exec) {
+//     commandLine 'node', 'server/index.js'
+// }
+
+task startServer(type: NodeTask) {
+    script = file('server/index.js')
+    ignoreExitValue = true
+    args = ['&']
 }
 
 buildReact.dependsOn installDependencies
