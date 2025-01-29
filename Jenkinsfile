@@ -9,6 +9,7 @@ pipeline {
         CI = 'true'
         BRANCH_NAME = "${env.BRANCH_NAME}"
         ENV = "${env}"
+        SERVER_PID_FILE = 'server.pid'
     }
     
     stages {
@@ -33,30 +34,21 @@ pipeline {
             }
         }
 
-         stage('Archive Artifacts') {
+        stage('Archive Artifacts') {
             steps {
                 echo 'Archiving build artifacts...'
                 archiveArtifacts artifacts: 'client/dist/**', fingerprint: true
             }
         }
         
-        // stage('Deploy') {
-        //     steps {
-        //         sh 'gradle startServer &'
-        //         sh 'sleep 20' // Give the server more time to start
-        //         sh 'curl -s http://localhost:3001/api/hello || exit 1'
-        //     }
-        // }
-
         stage('Deploy') {
             steps {
                 script {
                     sh '''
-                        gradle startServer &
-                        SERVER_PID=$!
-                        echo $SERVER_PID > server.pid
+                        gradle startServer > server.log 2>&1 &
+                        echo $! > ${SERVER_PID_FILE}
                         sleep 15
-                        if ps -p $SERVER_PID > /dev/null; then
+                        if ps -p $(cat ${SERVER_PID_FILE}) > /dev/null; then
                             echo "Server started successfully"
                         else
                             echo "Server failed to start"
@@ -78,38 +70,6 @@ pipeline {
             }
         }
 
-          
-        // stage('Deploy Locally') {
-        //     steps {
-        //         script {
-        //             sh '''
-        //                 echo "Starting the application..."
-        //                 nohup npm start > app.log 2>&1 &
-        //                 echo $! > .pidfile
-        //                 sleep 30
-        //                 if ps -p $(cat .pidfile) > /dev/null; then
-        //                     echo "Application started successfully"
-        //                 else
-        //                     echo "Application failed to start"
-        //                     exit 1
-        //                 fi
-        //             '''
-        //         }
-        //         sh '''
-        //             for i in {1..5}; do
-        //                 if curl -s http://localhost:3000; then
-        //                     echo "Application is responsive"
-        //                     exit 0
-        //                 fi
-        //                 sleep 5
-        //             done
-        //             echo "Application is not responsive after multiple attempts"
-        //             exit 1
-        //         '''
-        //     }
-        // }
-
-
         stage('Deployment Info') {
             steps {
                 echo "Deployment completed. Application is running at http://localhost:3001"
@@ -118,18 +78,19 @@ pipeline {
         }
     }
     
-    // post {
-    //     success {
-    //         echo 'Pipeline succeeded!'
-    //     }
-    //     failure {
-    //         echo 'Pipeline failed!'
-    //     }
-    //     always {
-    //         script {
-    //             sh 'pkill -f "node server/index.js" || true'
-    //         }
-    //     }
-    // }
+    post {
+        success {
+            echo 'Pipeline succeeded!'
+            echo 'The application is now accessible at http://localhost:3001'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+        always {
+            script {
+                echo 'Keeping the server running. To stop it later, use: kill $(cat ${SERVER_PID_FILE})'
+            }
+        }
+    }
 }
 
