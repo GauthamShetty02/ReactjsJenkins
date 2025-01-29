@@ -61,7 +61,7 @@ pipeline {
                 }
                 sh '''
                     for i in {1..5}; do
-                        if curl -s http://${JENKINS_NODE_IP}:3001/api/hello; then
+                        if curl -s http:localhost:3001/api/hello; then
                             echo "Server is responsive"
                             exit 0
                         fi
