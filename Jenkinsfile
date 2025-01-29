@@ -42,11 +42,12 @@ pipeline {
             }
         }
         
+        
         stage('Deploy') {
             steps {
                 script {
                     sh '''
-                        gradle startServer > server.log 2>&1 &
+                        nohup gradle startServer > server.log 2>&1 &
                         echo $! > ${SERVER_PID_FILE}
                         sleep 15
                         if ps -p $(cat ${SERVER_PID_FILE}) > /dev/null; then
@@ -60,7 +61,7 @@ pipeline {
                 }
                 sh '''
                     for i in {1..5}; do
-                        if curl -s http://localhost:3001/api/hello; then
+                        if curl -s http://${JENKINS_NODE_IP}:3001/api/hello; then
                             echo "Server is responsive"
                             exit 0
                         fi
