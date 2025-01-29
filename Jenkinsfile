@@ -118,18 +118,18 @@ pipeline {
         }
     }
     
-    post {
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
-        always {
-            script {
-                sh 'pkill -f "node server/index.js" || true'
-            }
-        }
-    }
+    // post {
+    //     success {
+    //         echo 'Pipeline succeeded!'
+    //     }
+    //     failure {
+    //         echo 'Pipeline failed!'
+    //     }
+    //     always {
+    //         script {
+    //             sh 'pkill -f "node server/index.js" || true'
+    //         }
+    //     }
+    // }
 }
 
