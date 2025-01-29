@@ -10,6 +10,7 @@ pipeline {
         BRANCH_NAME = "${env.BRANCH_NAME}"
         ENV = "${env}"
         SERVER_PID_FILE = 'server.pid'
+        JENKINS_NODE_IP = sh(script: "hostname -I | awk '{print \$1}'", returnStdout: true).trim()
     }
     
     stages {
@@ -72,7 +73,7 @@ pipeline {
 
         stage('Deployment Info') {
             steps {
-                echo "Deployment completed. Application is running at http://localhost:3001"
+                echo "Deployment completed. Application is running at http://${JENKINS_NODE_IP}:3001"
                 echo "You can manually open this URL in your web browser to view the application."
             }
         }
@@ -81,7 +82,7 @@ pipeline {
     post {
         success {
             echo 'Pipeline succeeded!'
-            echo 'The application is now accessible at http://localhost:3001'
+            echo "The application is now accessible at http://${JENKINS_NODE_IP}:3001"
         }
         failure {
             echo 'Pipeline failed!'
