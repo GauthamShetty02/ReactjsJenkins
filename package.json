@@ -4,7 +4,7 @@
   "scripts": {
     "start-client-server": "npm run build && npm run start",
     "start": "node server/index.js",
-    "build": "webpack --mode production --config client/webpack.config.js",
+    "build": "webpack --mode production --config client/webpack.config.js --output public",
     "dev:client": "webpack serve --mode development --config client/webpack.config.js",
     "dev:server": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
