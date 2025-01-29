@@ -1,11 +1,11 @@
 plugins {
     id 'base'
-    id 'com.github.node-gradle.node' version '3.3.0'
+    id 'com.github.node-gradle.node' version '3.1.0'
 }
 
 node {
-    version = '14.17.0'
-    npmVersion = '6.14.13'
+    version = '20.17.0'
+    npmVersion = '10.8.2'
     download = true
 }
 
@@ -13,16 +13,32 @@ task installDependencies(type: NpmTask) {
     args = ['install']
 }
 
+// task buildReact(type: NpmTask) {
+//     args = ['run', 'build']
+// }
+
 task buildReact(type: NpmTask) {
     args = ['run', 'build']
+
 }
+
+// task testReact(type: NpmTask) {
+//     args = ['test', '--', '--watchAll=false']
+// }
+
+// task startServer(type: Exec) {
+//     commandLine 'node', 'server/index.js'
+// }
 
 task startServer(type: NodeTask) {
     script = file('server/index.js')
     ignoreExitValue = true
+    args = ['&']
 }
 
 buildReact.dependsOn installDependencies
-startServer.dependsOn buildReact
+//testReact.dependsOn installDependencies
 
 build.dependsOn buildReact
+//check.dependsOn testReact
+
