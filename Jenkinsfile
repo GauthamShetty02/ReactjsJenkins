@@ -78,8 +78,7 @@ pipeline {
             steps {
                 echo "Deployment completed. Application is running at http://localhost:3001"
                 echo "You can manually open this URL in your web browser to view the application."
-                sh 'ps aux | grep node'
-                sh 'netstat -tulpn | grep :3001'
+              
             }
         }
     }
