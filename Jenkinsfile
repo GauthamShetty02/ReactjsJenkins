@@ -9,8 +9,8 @@ pipeline {
         CI = 'true'
         BRANCH_NAME = "${env.BRANCH_NAME}"
         ENV = "${env}"
-        DOCKER_USERNAME = credentials('docker-hub-username') // Docker Hub username (stored in Jenkins credentials)
-        DOCKER_PASSWORD = credentials('docker-hub-password') // Docker Hub password (stored in Jenkins credentials)
+        // DOCKER_USERNAME = credentials('docker-hub-username') // Docker Hub username (stored in Jenkins credentials)
+        // DOCKER_PASSWORD = credentials('docker-hub-password') // Docker Hub password (stored in Jenkins credentials)
         DOCKER_IMAGE = 'gshetty1/react-app'
         DOCKER_TAG = 'latest'
         DOCKER_CREDENTIALS = 'docker-hub-credentials'  // Set this in Jenkins credentials
