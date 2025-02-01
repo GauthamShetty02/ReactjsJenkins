@@ -50,7 +50,12 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t $DOCKER_IMAGE:$DOCKER_TAG ."
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                            docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./client/build
+                        '''
+                    }
                 }
             }
         }
