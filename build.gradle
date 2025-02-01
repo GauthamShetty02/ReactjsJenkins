@@ -1,6 +1,7 @@
 plugins {
     id 'base'
     id 'com.github.node-gradle.node' version '3.1.0'
+    id 'com.bmuschko.docker-remote-api' version '7.1.0' // Add this line for Docker support
 }
 
 node {
@@ -29,4 +30,27 @@ task startServer(type: NodeTask) {
 
 buildReact.dependsOn installDependencies
 build.dependsOn buildReact
+
+// Docker tasks
+docker {
+    registryCredentials {
+        username = project.findProperty("dockerUsername") ?: "gshetty1"
+        password = project.findProperty("dockerPassword") ?: "Tendulkar@1989"
+    }
+}
+
+task buildDockerImage(type: DockerBuildImage) {
+    dependsOn buildReact
+    inputDir = file('client/build')  // Adjust path to your build output
+    tag = "your-docker-username/react-app:latest"
+}
+
+task pushDockerImage(type: DockerPushImage) {
+    dependsOn buildDockerImage
+    imageName = "your-docker-username/react-app"
+    tag = "latest"
+}
+
+build.dependsOn buildDockerImage
+build.dependsOn pushDockerImage
 
