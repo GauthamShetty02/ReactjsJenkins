@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'docker:latest'  // Use the official Docker image (ensure it's available on your Jenkins agent)
+            image 'docker:node'  // Use the official Docker image (ensure it's available on your Jenkins agent)
             label 'docker-node'   // Label for nodes if you're using specific agents for Docker
             args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket for Docker commands to work
         }
