@@ -119,20 +119,20 @@ pipeline {
         }
     }
     
-//     post {
-//         success {
-//             echo 'Pipeline succeeded!'
+    post {
+      success {
+            echo 'Pipeline succeeded!'
             echo "The application is now accessible at http://localhost:3001"
-//         }
-//         failure {
-//             echo 'Pipeline failed!'
+       }
+       failure {
+           echo 'Pipeline failed!'
             sh 'cat server.log'
-//         }
-//         always {
-//             script {
-//                 echo 'Keeping the server running. To stop it later, use: kill $(cat ${SERVER_PID_FILE})'
-//             }
-//         }
-//     }
+       }
+        always {
+            script {
+               echo 'Keeping the server running. To stop it later, use: kill $(cat ${SERVER_PID_FILE})'
+             }
+        }
+     }
 }
 
