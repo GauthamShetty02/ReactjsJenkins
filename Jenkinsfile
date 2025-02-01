@@ -13,7 +13,7 @@ pipeline {
         DOCKER_IMAGE = 'gshetty1/react-app'
         DOCKER_TAG = 'latest'
         DOCKER_CREDENTIALS = 'docker-hub-credentials'  // Set this in Jenkins credentials
-        // SERVER_PID_FILE = 'server.pid'
+        SERVER_PID_FILE = 'server.pid'
         // JENKINS_NODE_IP = sh(script: "hostname -I | awk '{print \$1}'", returnStdout: true).trim()
     }
     
