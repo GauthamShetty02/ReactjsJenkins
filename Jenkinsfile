@@ -48,6 +48,17 @@ pipeline {
             }
         }
 
+        stages {
+        stage('Check Docker') {
+            steps {
+                script {
+                    sh 'echo $PATH'        // Check if Docker is in the PATH
+                    sh 'docker --version'  // Check if Docker is accessible
+                }
+            }
+        }
+    }
+
         stage('Build Docker Image') {
             steps {
                 script {
