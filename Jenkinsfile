@@ -49,28 +49,28 @@ pipeline {
         }
 
         
-        stage('Check Docker') {
-            steps {
-                script {
-                    sh 'echo $PATH'        // Check if Docker is in the PATH
-                    sh 'docker --version'  // Check if Docker is accessible
-                }
-            }
-        }
+        // stage('Check Docker') {
+        //     steps {
+        //         script {
+        //             sh 'echo $PATH'        // Check if Docker is in the PATH
+        //             sh 'docker --version'  // Check if Docker is accessible
+        //         }
+        //     }
+        // }
     
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh '''
-                            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-                            docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./client/build
-                        '''
-                    }
-                }
-            }
-        }
+        // stage('Build Docker Image') {
+        //     steps {
+        //         script {
+        //             withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+        //                 sh '''
+        //                     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        //                     docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./client/build
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
 
         // stage('Push to Docker Hub') {
         //     steps {
