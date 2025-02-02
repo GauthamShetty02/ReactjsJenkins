@@ -54,6 +54,12 @@ pipeline {
                 sh '/usr/local/bin/docker version'
             }
         }
+
+        stage('Check Docker Build') {
+            steps {
+                sh '/usr/local/bin/docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./client/build'
+            }
+        }
     
 
         // stage('Build Docker Image') {
