@@ -57,7 +57,7 @@ pipeline {
 
         stage('Check Docker Build') {
             steps {
-                sh '/usr/local/bin/docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./client/build'
+                sh '/usr/local/bin/docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./client/dist/'
             }
         }
     
