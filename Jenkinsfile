@@ -55,11 +55,11 @@ pipeline {
             }
         }
 
-        // stage('Check Docker Build') {
-        //     steps {
-        //         sh '/usr/local/bin/docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./client/dist/'
-        //     }
-        // }
+        stage('Check Docker Build') {
+            steps {
+                sh '/usr/local/bin/docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./client/dist/'
+            }
+        }
     
 
         // stage('Build Docker Image') {
