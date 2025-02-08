@@ -49,11 +49,11 @@ pipeline {
         }
 
         
-        // stage('Check Docker') {
-        //     steps {
-        //         sh '/usr/local/bin/docker version'
-        //     }
-        // }
+        stage('Check Docker') {
+            steps {
+                sh '/usr/local/bin/docker version'
+            }
+        }
 
         // stage('Check Docker Build') {
         //     steps {
