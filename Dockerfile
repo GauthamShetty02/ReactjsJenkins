@@ -1,4 +1,4 @@
-correct below docket file # Step 1: Use Node.js 20.17.0 as the base image
+# correct below docket file # Step 1: Use Node.js 20.17.0 as the base image
 FROM node:20.17.0-alpine
 
 # Step 2: Set the working directory
