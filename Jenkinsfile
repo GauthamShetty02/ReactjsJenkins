@@ -62,41 +62,7 @@ pipeline {
         }
     
 
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-        //                 sh '''
-        //                     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        //                     docker build -t $DOCKER_IMAGE:$DOCKER_TAG ./client/build
-        //                 '''
-        //             }
-        //         }
-        //     }
-        // }
-
-        // stage('Push to Docker Hub') {
-        //     steps {
-        //         script {
-        //             withDockerRegistry([credentialsId: DOCKER_CREDENTIALS, url: '']) {
-        //                 sh "docker push $DOCKER_IMAGE:$DOCKER_TAG"
-        //             }
-        //         }
-        //     }
-        // }
-
-        // stage('Deploy Container') {
-        //     steps {
-        //         script {
-        //             sh '''
-        //                 docker stop react-app || true
-        //                 docker rm react-app || true
-        //                 docker run -d -p 3001:3001 --name react-app $DOCKER_IMAGE:$DOCKER_TAG
-        //             '''
-        //         }
-        //     }
-        // }
-
+     
         
         
         
