@@ -61,29 +61,29 @@ pipeline {
             }
         }
 
-    // stage('Publish to Docker Hub') {
-    //         steps {
-    //             script {
-    //                 withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-    //                     sh '''
-    //                         echo "$DOCKER_PASSWORD" | /usr/local/bin/docker login -u "$DOCKER_USERNAME" --password-stdin
-    //                         /usr/local/bin/docker push $DOCKER_IMAGE:$DOCKER_TAG
-    //                         /usr/local/bin/docker logout
-    //                     '''
-    //                 }
-    //             }
-    //         }
-    //     } 
-
-        stage('Push to Docker Hub') {
+    stage('Publish to Docker Hub') {
             steps {
                 script {
-                    withDockerRegistry([credentialsId: DOCKER_CREDENTIALS, url: '']) {
-                        sh "docker push $DOCKER_IMAGE:$DOCKER_TAG"
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                            echo "$DOCKER_PASSWORD" | /usr/local/bin/docker login -u "$DOCKER_USERNAME" --password-stdin
+                            /usr/local/bin/docker push $DOCKER_IMAGE:$DOCKER_TAG
+                            /usr/local/bin/docker logout
+                        '''
                     }
                 }
             }
-        }
+        } 
+
+        // stage('Push to Docker Hub') {
+        //     steps {
+        //         script {
+        //             withDockerRegistry([credentialsId: DOCKER_CREDENTIALS, url: '']) {
+        //                 sh "docker push $DOCKER_IMAGE:$DOCKER_TAG"
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Deploy Container') {
             steps {
