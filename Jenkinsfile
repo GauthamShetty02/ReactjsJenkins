@@ -61,19 +61,19 @@ pipeline {
             }
         }
 
-       stage('Publish to Docker Hub') {
-    steps {
-        script {
-            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                sh '''
-                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                    docker push $DOCKER_IMAGE:$DOCKER_TAG
-                    docker logout
-                '''
+    stage('Publish to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                            echo "$DOCKER_PASSWORD" | /usr/local/bin/docker login -u "$DOCKER_USERNAME" --password-stdin
+                            /usr/local/bin/docker push $DOCKER_IMAGE:$DOCKER_TAG
+                            /usr/local/bin/docker logout
+                        '''
+                    }
+                }
             }
-        }
-    }
-}
+        } 
 
 
      
