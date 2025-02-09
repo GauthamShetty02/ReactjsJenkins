@@ -89,9 +89,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        docker stop react-app || true
-                        docker rm react-app || true
-                        docker run -d -p 3001:3001 --name react-app $DOCKER_IMAGE:$DOCKER_TAG
+                        /usr/local/bin/docker stop react-app || true
+                        /usr/local/bin/docker rm react-app || true
+                        /usr/local/bin/docker run -d -p 3001:3001 --name react-app $DOCKER_IMAGE:$DOCKER_TAG
                     '''
                 }
             }
