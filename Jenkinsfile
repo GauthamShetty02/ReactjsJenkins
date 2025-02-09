@@ -91,7 +91,7 @@ pipeline {
                     sh '''
                         /usr/local/bin/docker stop react-app || true
                         /usr/local/bin/docker rm react-app || true
-                        /usr/local/bin/docker run -d -p 3001:3001 --name react-app $DOCKER_IMAGE:$DOCKER_TAG
+                        /usr/local/bin/docker run -d -p 5001:3001 --name react-app $DOCKER_IMAGE:$DOCKER_TAG
                     '''
                 }
             }
