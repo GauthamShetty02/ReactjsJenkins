@@ -14,6 +14,7 @@ pipeline {
         DOCKER_TAG = 'latest'
         DOCKER_CREDENTIALS = 'docker-hub-credentials'
         KUBE_CONFIG = credentials('kubeconfig-credentials')  // Kubernetes config stored in Jenkins
+        KUBE_NAMESPACE = 'default'  // Set the namespace explicitly
     }
     
     stages {
@@ -62,15 +63,24 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                   withCredentials([file(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG')]) {
-    sh '''
-        export KUBECONFIG=$KUBECONFIG
-        kubectl apply -f deployment.yaml
-        kubectl apply -f service.yaml
-        kubectl apply -f ingress.yaml
-    '''
-}
+                    withCredentials([file(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG')]) {
+                        sh '''
+                            export KUBECONFIG=${KUBECONFIG}
+                            
+                            # Verify YAML files exist before applying
+                            if [ ! -f deployment.yaml ] || [ ! -f service.yaml ]; then
+                                echo "Missing Kubernetes YAML files!"
+                                exit 1
+                            fi
+                            
+                            kubectl apply -f deployment.yaml -n ${KUBE_NAMESPACE}
+                            kubectl apply -f service.yaml -n ${KUBE_NAMESPACE}
 
+                            # Wait for pods to be ready
+                            echo "Waiting for deployment to be available..."
+                            kubectl rollout status deployment/react-app -n ${KUBE_NAMESPACE} --timeout=120s
+                        '''
+                    }
                 }
             }
         }
@@ -80,9 +90,8 @@ pipeline {
                 script {
                     withCredentials([file(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG')]) {
                         sh '''
-                            kubectl get pods -n default
-                            kubectl get svc -n default
-                            kubectl get ingress -n default
+                            kubectl get pods -n ${KUBE_NAMESPACE}
+                            kubectl get svc -n ${KUBE_NAMESPACE}
                         '''
                     }
                 }
@@ -98,10 +107,10 @@ pipeline {
     
     post {
         success {
-            echo 'Pipeline succeeded! The application is deployed to Kubernetes.'
+            echo '✅ Pipeline succeeded! The application is deployed to Kubernetes.'
         }
         failure {
-            echo 'Pipeline failed!'
+            echo '❌ Pipeline failed! Check the logs for details.'
         }
     }
 }
